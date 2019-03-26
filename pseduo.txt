@@ -1,0 +1,49 @@
+
+node := { low, high, direction }
+
+
+method push( node )
+    append node to H
+    sift_up while S[node.low] < S[parent(node).low]
+
+
+method pop()
+    head = S[node.low]
+    node.low += node.direction
+
+    if node.low == node.high
+        place the last node in H at H[0] and delete node
+
+    sift_down while S[node.low] > S[best_child(node).low]
+
+
+
+method ksort( S : array of integers, n : length of S )
+
+    H := A min heap to hold pointers that prioritizes pointers to smaller elements of S
+
+    i := 0
+    j := 1
+    while j < n
+        if S[j-1] < S[j]
+            while j < n and S[j-1] >= S[j]
+                j ++
+
+            push( node(j-1, i-1, -1) ) // Descending node
+
+        else
+            while j < n and S[j-1] >= S[j]
+                j++
+
+            push( node(i, j, +1) ) // Ascending node
+
+        i = j
+        j ++
+
+    if i < n:
+        push( node(i, j, +1) ) // This will always be a singleton
+
+
+
+    for i in 0..n
+        S[i] = pop()

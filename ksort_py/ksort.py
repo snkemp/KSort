@@ -5,15 +5,12 @@ def ksort(S):
     part = []
 
     def push(cur):
-        C = 0 if cur[2] > 0 else 1
-
         pos = len(part)
         part.append(cur)
         while pos > 0:
             par = (pos -1) >> 1
 
-            P = 0 if part[par][2] > 0 else 1
-            if S[ part[par][P] ] <= S[ cur[C] ]:
+            if S[ part[par][0] ] <= S[ cur[0] ]:
                 break
 
             part[pos] = part[par]
@@ -28,10 +25,10 @@ def ksort(S):
     N = len(S)
     while j < N:
         if S[ j-1 ] > S[ j ]:
-            while j < N and S[j-1] > S[j]:
+            while j < N and S[j-1] >= S[j]:
                 j += 1
 
-            push([i-1, j-1, -1])
+            push([j-1, i-1, -1])
             i = j
             j = j+1
 
@@ -47,13 +44,9 @@ def ksort(S):
     ###
 
     def pop():
-        if part[0][2] > 0:
-            head = part[0][0]
-            part[0][0] += 1
+        head = part[0][0]
+        part[0][0] += part[0][2]
 
-        else:
-            head = part[0][1]
-            part[0][1] -= 1
 
         if part[0][0] == part[0][1]:
             part[0] = part[-1]
@@ -63,7 +56,6 @@ def ksort(S):
 
         pos = 0
         cur = part[0]
-        C = 0 if part[0][2] > 0 else 1
 
         n = len(part)
         m = (n) >> 1
@@ -71,14 +63,10 @@ def ksort(S):
         while pos < m:
 
             sel = (pos << 1) + 1
-            if sel+1 < n:
-                L = 0 if part[sel][2] > 0 else 1
-                R = 0 if part[sel+1][2] > 0 else 1
-                if S[ part[sel][L] ] > S[ part[sel+1][R] ]:
+            if sel+1 < n and S[ part[sel][0] ] > S[ part[sel+1][0] ]:
                     sel += 1
 
-            P = 0 if part[sel][2] > 0 else 1
-            if S[ part[sel][P] ] >= S[ cur[C] ]:
+            if S[ part[sel][0] ] >= S[ cur[0] ]:
                 break
 
             part[pos] = part[sel]
